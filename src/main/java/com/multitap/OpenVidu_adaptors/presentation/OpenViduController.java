@@ -34,7 +34,7 @@ public class OpenViduController {
     public ResponseEntity<Map<String, String>> generateToken(
             @RequestHeader ("userUuid") String userUuid,
             @RequestParam String mentoringSessionUuid) {
-        log.info("Generating OpenVidu token1");
+        log.info("generateToken: userUuid={}, mentoringSessionUuid={}", userUuid, mentoringSessionUuid);
         try {
             String token = openViduService.generateToken(mentoringSessionUuid, userUuid);
             return ResponseEntity.ok(Map.of("token", token));
