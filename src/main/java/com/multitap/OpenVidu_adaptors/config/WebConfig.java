@@ -15,11 +15,9 @@ public class WebConfig {
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
                         .allowedOrigins("*") // 모든 도메인 허용
-//                        .allowedOriginPatterns("*")
                         .allowedHeaders("*")
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowCredentials(false); // 인증 정보를 포함하지 않음
-//                        .allowCredentials(true);
             }
         };
     }

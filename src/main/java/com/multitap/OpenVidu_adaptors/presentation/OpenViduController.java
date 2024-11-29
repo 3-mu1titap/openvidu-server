@@ -31,15 +31,9 @@ public class OpenViduController {
     // 세션에서 토큰 생성
     @Operation(summary = "토큰 발행", description = "memberSessionUuid와 userUuid로 토큰을 발행합니다.")
     @PostMapping("/generate-token")
-//    @PostMapping("/token")
     public ResponseEntity<Map<String, String>> generateToken(
-//            @RequestBody Map<String, String> params) {
             @RequestHeader ("userUuid") String userUuid,
             @RequestParam String mentoringSessionUuid) {
-//        String roomName = params.get("roomName");
-//        String participantName = params.get("participantName");
-//        String token = openViduService.generateToken(roomName, participantName);
-//        return ResponseEntity.ok(Map.of("token", token));
         log.info("Generating OpenVidu token1");
         try {
             String token = openViduService.generateToken(mentoringSessionUuid, userUuid);
@@ -60,6 +54,5 @@ public class OpenViduController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(400).body(e.getMessage());
         }
-
     }
 }
