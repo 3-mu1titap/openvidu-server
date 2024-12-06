@@ -79,3 +79,4 @@ jobs:
             sudo docker rm -f ${{ secrets.OPENVIDU_SERVER_CONTAINER_NAME }}  # 컨테이너 제거
             sudo docker rmi -f ${{ secrets.DOCKERHUB_USERNAME }}/openvidu-server:latest  # 이미지 제거
             sudo docker run -d --name ${{ secrets.OPENVIDU_SERVER_CONTAINER_NAME }} -p 4443:4443 ${{ secrets.DOCKERHUB_USERNAME }}/openvidu-server:latest
+
