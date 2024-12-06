@@ -70,8 +70,8 @@ jobs:
       - name: SSH to EC2 and deploy
         uses: appleboy/ssh-action@v0.1.3
         with:
-        #  host: ${{ secrets.EC2_HOST }}
-          host: ${{ secrets.OPENVIDU_HOST }}
+          host: ${{ secrets.EC2_HOST }}
+          #host: ${{ secrets.OPENVIDU_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
           script: |
