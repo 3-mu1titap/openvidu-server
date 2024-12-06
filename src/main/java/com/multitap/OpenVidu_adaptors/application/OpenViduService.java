@@ -26,7 +26,7 @@
 //        }
 //
 //        // 세션 ID와 사용자 UUID를 사용하여 AccessToken 생성
-//        AccessToken token = new AccessToken(LIVEKIT_API_KEY, LIVEKIT_API_SECRET);
+//        AccessToken token = new AccessToken("OPENVIDUAPP", "ADAPTORS_KEY");
 //        token.setName(userUuid);
 //        token.setIdentity(userUuid);
 //        token.addGrants(new RoomJoin(true), new RoomName(mentoringSessionUuid));
