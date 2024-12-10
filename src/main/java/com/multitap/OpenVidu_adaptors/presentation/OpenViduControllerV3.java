@@ -62,6 +62,7 @@ public class OpenViduControllerV3 {
 
         Connection connection = session.createConnection(properties);
 
+
         return new ResponseEntity<>(connection.getToken(), HttpStatus.OK);
     }
 }
