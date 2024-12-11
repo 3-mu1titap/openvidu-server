@@ -1,9 +1,7 @@
 package com.multitap.OpenVidu_adaptors.application;
 
 import com.multitap.OpenVidu_adaptors.entity.ViduSession;
-import com.multitap.OpenVidu_adaptors.entity.ViduToken;
 import com.multitap.OpenVidu_adaptors.infrastructure.ViduSessionRepository;
-import com.multitap.OpenVidu_adaptors.infrastructure.ViduTokenRepository;
 import io.openvidu.java.client.*;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +15,6 @@ import org.springframework.stereotype.Service;
 public class OpenViduServiceImpl implements OpenViduService {
 
     private final ViduSessionRepository viduSessionRepository;
-    private final ViduTokenRepository viduTokenRepository;
     private final OpenVidu openvidu;
 
     @Override
@@ -62,12 +59,6 @@ public class OpenViduServiceImpl implements OpenViduService {
     @Override
     public String createConnection(String mentoringSessionUuid, String userUuid) {
 
-        ViduToken byUserUuidAndSessionId = viduTokenRepository.findByUserUuidAndSessionId(userUuid, mentoringSessionUuid);
-
-        if (byUserUuidAndSessionId != null) {
-            return byUserUuidAndSessionId.getToken();
-        }
-
         try {
             // Find the session
             Session session = openvidu.getActiveSession(mentoringSessionUuid);
@@ -89,7 +80,7 @@ public class OpenViduServiceImpl implements OpenViduService {
             Connection connection = session.createConnection(properties);
             log.info("Connection created successfully for user UUID {} with token: {}", userUuid, connection.getToken());
 
-            return viduTokenRepository.save(toViduToken(mentoringSessionUuid, userUuid, connection)).getToken();
+            return connection.getToken();
         } catch (OpenViduHttpException e) {
             log.error("Failed to create connection due to OpenVidu HTTP error: {}", e.getMessage());
             throw new RuntimeException("Unable to create connection due to OpenVidu HTTP error", e);
@@ -99,11 +90,4 @@ public class OpenViduServiceImpl implements OpenViduService {
         }
     }
 
-    private ViduToken toViduToken(String mentoringSessionUuid, String userUuid, Connection connection) {
-        return ViduToken.builder()
-                .viduSession(viduSessionRepository.findBySessionId(mentoringSessionUuid))
-                .userUuid(userUuid)
-                .token(connection.getToken())
-                .build();
-    }
 }
