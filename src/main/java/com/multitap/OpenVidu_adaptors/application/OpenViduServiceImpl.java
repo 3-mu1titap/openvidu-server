@@ -61,6 +61,8 @@ public class OpenViduServiceImpl implements OpenViduService {
             // Find the session
             Session session = openvidu.getActiveSession(mentoringSessionUuid);
 
+            log.info("seesion = {}", session.getSessionId());
+
             if (session == null) {
                 log.warn("Session with UUID {} not found", mentoringSessionUuid);
                 throw new IllegalArgumentException("Session not found");
