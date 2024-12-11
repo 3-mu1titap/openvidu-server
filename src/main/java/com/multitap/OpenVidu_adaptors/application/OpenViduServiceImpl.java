@@ -89,9 +89,6 @@ public class OpenViduServiceImpl implements OpenViduService {
             Connection connection = session.createConnection(properties);
             log.info("Connection created successfully for user UUID {} with token: {}", userUuid, connection.getToken());
 
-//            ViduSession viduSession = viduSessionRepository.findBySessionId(mentoringSessionUuid);
-//            String token = connection.getToken();
-
             return viduTokenRepository.save(toViduToken(mentoringSessionUuid, userUuid, connection)).getToken();
         } catch (OpenViduHttpException e) {
             log.error("Failed to create connection due to OpenVidu HTTP error: {}", e.getMessage());
