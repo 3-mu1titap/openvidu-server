@@ -3,10 +3,8 @@ package com.multitap.OpenVidu_adaptors.application;
 import com.multitap.OpenVidu_adaptors.entity.ViduSession;
 import com.multitap.OpenVidu_adaptors.infrastructure.ViduSessionRepository;
 import io.openvidu.java.client.*;
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
