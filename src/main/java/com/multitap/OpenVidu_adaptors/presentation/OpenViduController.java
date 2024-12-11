@@ -1,58 +1,65 @@
-//package com.multitap.OpenVidu_adaptors.presentation;
-//
-//import com.multitap.OpenVidu_adaptors.application.OpenViduService;
-//import io.livekit.server.WebhookReceiver;
-//import io.swagger.v3.oas.annotations.Operation;
-//import livekit.LivekitWebhook;
-//import lombok.RequiredArgsConstructor;
-//import lombok.extern.slf4j.Slf4j;
-//import org.springframework.http.HttpStatus;
-//import org.springframework.http.ResponseEntity;
-//import org.springframework.web.bind.annotation.*;
-//
-//import java.util.Map;
-//
-//@CrossOrigin(
-//        origins = {"*"}
-//)
-//@RestController
-//@RequiredArgsConstructor
-//@RequestMapping("/api/v1/openvidu")
-//@Slf4j
-//public class OpenViduController {
-//
-//    private final OpenViduService openViduService;
-//
-//    @GetMapping("/")
-//    public Map<String, String> hello() {
-//        return Map.of("message", "Welcome to the OpenVidu Application!");
-//    }
-//
-//    // 세션에서 토큰 생성
-//    @Operation(summary = "토큰 발행", description = "memberSessionUuid와 userUuid로 토큰을 발행합니다.")
-//    @PostMapping("/generate-token")
-//    public ResponseEntity<Map<String, String>> generateToken(
-//            @RequestHeader ("userUuid") String userUuid,
-//            @RequestParam String mentoringSessionUuid) {
-//        log.info("generateToken: userUuid={}, mentoringSessionUuid={}", userUuid, mentoringSessionUuid);
-//        try {
-//            String token = openViduService.generateToken(mentoringSessionUuid, userUuid);
-//            return ResponseEntity.ok(Map.of("token", token));
-//        } catch (IllegalArgumentException e) {
-//            log.error("Error generating OpenVidu token", e);
-//            return ResponseEntity.status(400).body(Map.of("error", e.getMessage()));
-//        }
-//    }
-//
-//    @PostMapping(value = "/livekit/webhook", consumes = "application/webhook+json")
-//    public ResponseEntity<String> receiveWebhook(
-//            @RequestHeader("Authorization") String authHeader,
-//            @RequestBody String body) {
-//        try {
-//            openViduService.receiveWebhook(authHeader, body);
-//            return ResponseEntity.ok("ok");
-//        } catch (IllegalArgumentException e) {
-//            return ResponseEntity.status(400).body(e.getMessage());
-//        }
-//    }
-//}
+package com.multitap.OpenVidu_adaptors.presentation;
+
+import com.multitap.OpenVidu_adaptors.application.OpenViduService;
+import io.openvidu.java.client.*;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
+
+@Slf4j
+@RestController
+@CrossOrigin(origins = "*")
+@RequiredArgsConstructor
+@RequestMapping("/api/v1/openvidu")
+public class OpenViduController {
+
+    private final OpenViduService openViduService;
+
+    /**
+     * @param params The Session properties
+     * @return The Session ID
+     */
+    @PostMapping("/session")
+    public ResponseEntity<String> initializeSession(
+            @RequestParam String mentoringSessionUuid,
+            @RequestBody(required = false) Map<String, Object> params) {
+
+        log.info("Received request to initialize session with UUID: {}", mentoringSessionUuid);
+
+        try {
+            String sessionId = openViduService.initializeSession(mentoringSessionUuid);
+            return new ResponseEntity<>(sessionId, HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("Unexpected error: {}", e.getMessage());
+            return new ResponseEntity<>("Unexpected error occurred", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
+    /**
+     * @param mentoringSessionUuid The Session in which to create the Connection
+     * @param params    The Connection properties
+     * @return The Token associated to the Connection
+     */
+    @PostMapping("/session/{mentoringSessionUuid}/connection")
+    public ResponseEntity<String> createConnection(
+            @RequestHeader ("userUuid") String userUuid,
+            @PathVariable("mentoringSessionUuid") String mentoringSessionUuid,
+            @RequestBody(required = false) Map<String, Object> params) {
+
+        log.info("Received request to create connection for session UUID: {}", mentoringSessionUuid);
+        log.info("Received request to create connection for user UUID: {}", userUuid);
+
+        try {
+            String token = openViduService.createConnection(mentoringSessionUuid, userUuid);
+            return new ResponseEntity<>(token, HttpStatus.OK);
+        } catch (RuntimeException e) {
+            log.error("Error occurred: {}", e.getMessage());
+            return new ResponseEntity<>("Internal server error", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+}
