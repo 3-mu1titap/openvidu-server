@@ -82,6 +82,7 @@ public class OpenViduServiceImpl implements OpenViduService {
 
             return connection.getToken();
         } catch (OpenViduHttpException e) {
+            e.printStackTrace();
             log.error("Failed to create connection due to OpenVidu HTTP error: {}", e.getMessage());
             throw new RuntimeException("Unable to create connection due to OpenVidu HTTP error", e);
         } catch (Exception e) {
