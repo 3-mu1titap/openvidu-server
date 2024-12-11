@@ -18,11 +18,11 @@ public class OpenViduServiceImpl implements OpenViduService {
     @Override
     public String initializeSession(String mentoringSessionUuid) {
 
-        ViduSession bySessionId = viduSessionRepository.findBySessionId(mentoringSessionUuid);
-
-        if (bySessionId != null) {
-            return bySessionId.getSessionId();
-        }
+//        ViduSession bySessionId = viduSessionRepository.findBySessionId(mentoringSessionUuid);
+//
+//        if (bySessionId != null) {
+//            return bySessionId.getSessionId();
+//        }
 
         try {
             // 세션 속성 설정 (customSessionId에 mentoringSessionUuid 사용)
